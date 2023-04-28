@@ -22,14 +22,6 @@ void fork_new_process(char command[MAX_COMMAND_LENGTH])
 	{
 		perror("fork failed");
 	}
-	else if (pid == 0) /* child process*/
-	{
-		char *argv[] = {command, NULL};
-
-		execve(command, argv, NULL);
-		perror("./shell"); /*if execl returns, it must have failed*/
-		exit(1);
-	}
 	else /*parent process*/
 	{
 		int status;
