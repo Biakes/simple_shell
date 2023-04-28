@@ -13,7 +13,6 @@ void fork_new_process(char **command, char **path)
 {
 	exit_func(command);
 	env_func(command);
-	pid_t pid = fork();
 
 	if (pid == -1)
 	{
@@ -22,7 +21,6 @@ void fork_new_process(char **command, char **path)
 	else if (pid == 0) /* child process*/
 	{
 		execve(command[0], command, NULL);
-		char executable_path[MAX_PATH_LENGTH];
 		int i;
 
 		for (i = 0; path[i] != NULL; i++)
