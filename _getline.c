@@ -1,8 +1,5 @@
 #include "main.h"
 
-void read_stream(int c, ssize_t chars_read, size_t bytes_allocated,
-		size_t *n, char **lineptr);
-
 /**
  * _getline - reads an entire line from stream, storing the address
  *  of the buffer containing the text into *lineptr.  The buffer is
@@ -14,8 +11,7 @@ void read_stream(int c, ssize_t chars_read, size_t bytes_allocated,
  *
  *  Return: the number of char read
  */
-ssize_t _getline(char **restrict lineptr, size_t *restrict n,
-		FILE * restrict stream)
+ssize_t _getline(char **restrict lineptr, size_t *restrict n, FILE * restrict stream)
 {
 	ssize_t chars_read = 0; /* keeps track of the num of char read */
 	size_t bytes_allocated = *n;
