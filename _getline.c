@@ -7,11 +7,11 @@
  *
  *  @lineptr: stores g the address of the buffer containing the text
  *  @n: number of bytes allocated to the buffer
- *  @stream:user input stream from the terminal
+ *  @streeam:user input stream from the terminal
  *
  *  Return: the number of char read
  */
-ssize_t _getline(char **restrict lineptr, size_t *restrict n, FILE * restrict stream)
+ssize_t _getline(char **restrict lineptr, size_t *restrict n, FILE *restrict stream)
 {
 	ssize_t chars_read = 0; /* keeps track of the num of char read */
 	size_t bytes_allocated = *n;
@@ -29,11 +29,31 @@ ssize_t _getline(char **restrict lineptr, size_t *restrict n, FILE * restrict st
 		*lineptr = malloc(bytes_allocated);
 		if (*lineptr == NULL)
 		{
-			return (-1); /* Memory allocation failed */
+			return (-1); // Memory allocation failed
 		}
 	}
 	/* Read characters from stream until newline or end of file */
-	read_stream(c, chars_read, bytes_allocated, n, lineptr);
+	while ((c = fgetc(stream)) != EOF)
+	{
+		if (chars_read + 1 >= bytes_allocated)
+		{
+			/* Expand the buffer if needed */
+			bytes_allocated *= 2;
+			char* new_lineptr = realloc(*lineptr, bytes_allocated);
+			if (new_lineptr == NULL)
+			{
+				return (-1); /* Memory allocation failed */
+			}
+			*lineptr = new_lineptr;
+			*n = bytes_allocated;
+		}
+
+		(*lineptr)[chars_read++] = c;
+		if (c == '\n')
+		{
+			break; /* End of line found */
+		}
+	}
 
 	if (chars_read == 0)
 	{
@@ -43,38 +63,4 @@ ssize_t _getline(char **restrict lineptr, size_t *restrict n, FILE * restrict st
 	/* Null-terminate the line */
 	(*lineptr)[chars_read] = '\0';
 	return (chars_read);
-}
-
-/**
- * read_stream - function reads characters
- * @c: int - number of characters
- * @chars_read: keeps track of the num of char read
- * @bytes_allocated: same as n
- * @lineptr:  stores g the address of the buffer containing the text
- * @n:  number of bytes allocated to the buffer
- */
-void read_stream(int c, ssize_t chars_read, size_t bytes_allocated,
-		size_t *n, char **lineptr)
-{
-	while ((c = fgetc(stream)) != EOF)
-	{
-		if (chars_read + 1 >= bytes_allocated)
-		{
-			/* Expand the buffer if needed */
-			bytes_allocated *= 2;
-			char *new_lineptr = realloc(*lineptr, bytes_allocated);
-
-			if (new_lineptr == NULL)
-			{
-				return (-1); /* Memory allocation failed */
-			}
-			*lineptr = new_lineptr;
-			*n = bytes_allocated;
-		}
-		(*lineptr)[chars_read++] = c;
-		if (c == '\n')
-		{
-			break; /* End of line found */
-		}
-	}
 }
