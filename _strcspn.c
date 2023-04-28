@@ -1,4 +1,4 @@
-#include "others.h"
+#include "main.h"
 
 /**
  * _strcspn - returns the length of the initial segment of a string
